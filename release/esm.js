@@ -12608,10 +12608,10 @@ var PieChartComponent = /** @class */ (function (_super) {
             showLegend: this.legend,
             legendPosition: this.legendPosition
         });
-        var xOffset = this.margins[3] + this.dims.width / 2;
+        var xOffset = this.margins[3] + this.dims.width / 2 - this.legendMinWidth / 2;
         var yOffset = this.margins[0] + this.dims.height / 2;
         this.translation = "translate(" + xOffset + ", " + yOffset + ")";
-        this.outerRadius = Math.min(this.dims.width, this.dims.height);
+        this.outerRadius = Math.min((this.dims.width - this.legendMinWidth), this.dims.height);
         if (this.labels) {
             this.outerRadius /= 3;
         }
@@ -12658,7 +12658,7 @@ var PieChartComponent = /** @class */ (function (_super) {
             colors: this.colors,
             title: this.legendTitle,
             position: this.legendPosition,
-            minWith: this.legendMinWidth,
+            minWidth: this.legendMinWidth,
         };
     };
     PieChartComponent.prototype.onActivate = function (item) {
