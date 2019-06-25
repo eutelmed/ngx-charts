@@ -93,6 +93,7 @@ export class ChartComponent implements OnChanges {
   }
 
   update(): void {
+    const minLegendWidth = 300;
     let legendColumns = 0;
     if (this.showLegend) {
       this.legendType = this.getLegendType();
@@ -105,13 +106,17 @@ export class ChartComponent implements OnChanges {
         }
       }
     }
+    if (this.legendOptions.minWidth) {
+      this.legendWidth = this.legendOptions.minWidth;
+      this.chartWidth = this.view[0] - this.legendWidth;
+    } else {
+      const chartColumns = 12 - legendColumns;
 
-    const chartColumns = 12 - legendColumns;
-
-    this.chartWidth = Math.floor((this.view[0] * chartColumns / 12.0));
-    this.legendWidth = (!this.legendOptions || this.legendOptions.position === 'right')
-      ? Math.floor((this.view[0] * legendColumns / 12.0))
-      : this.chartWidth;
+      this.chartWidth = Math.floor((this.view[0] * chartColumns / 12.0));
+      this.legendWidth = (!this.legendOptions || this.legendOptions.position === 'right')
+        ? Math.floor((this.view[0] * legendColumns / 12.0))
+        : this.chartWidth;
+    }
   }
 
   getLegendType(): string {
