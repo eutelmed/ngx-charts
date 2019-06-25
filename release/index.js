@@ -8525,7 +8525,6 @@ var ChartComponent = /** @class */ (function () {
         this.update();
     };
     ChartComponent.prototype.update = function () {
-        var minLegendWidth = 300;
         var legendColumns = 0;
         if (this.showLegend) {
             this.legendType = this.getLegendType();
@@ -8538,7 +8537,7 @@ var ChartComponent = /** @class */ (function () {
                 }
             }
         }
-        if (this.legendOptions.minWidth) {
+        if (this.legendOptions && this.legendOptions.minWidth) {
             this.legendWidth = this.legendOptions.minWidth;
             this.chartWidth = this.view[0] - this.legendWidth;
         }
