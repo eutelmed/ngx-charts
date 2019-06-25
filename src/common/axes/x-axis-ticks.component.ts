@@ -23,9 +23,9 @@ import { reduceTicks } from './ticks.helper';
           stroke-width="0.01"
           [attr.text-anchor]="textAnchor"
           [attr.transform]="textTransform"
-          [style.font-size]="'12px'"
-        >
-          {{ tickTrim(tickFormat(tick)) }}
+          [style.color]="'#122a35'"
+          [style.font-size]="'10px'">
+          {{tickTrim(tickFormat(tick))}}
         </svg:text>
       </svg:g>
     </svg:g>
