@@ -93,7 +93,6 @@ export class ChartComponent implements OnChanges {
   }
 
   update(): void {
-    const minLegendWidth = 300;
     let legendColumns = 0;
     if (this.showLegend) {
       this.legendType = this.getLegendType();
@@ -106,7 +105,7 @@ export class ChartComponent implements OnChanges {
         }
       }
     }
-    if (this.legendOptions.minWidth) {
+    if (this.legendOptions && this.legendOptions.minWidth) {
       this.legendWidth = this.legendOptions.minWidth;
       this.chartWidth = this.view[0] - this.legendWidth;
     } else {
