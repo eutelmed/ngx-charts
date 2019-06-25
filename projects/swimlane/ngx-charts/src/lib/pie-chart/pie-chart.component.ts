@@ -108,16 +108,11 @@ export class PieChartComponent extends BaseChartComponent {
       legendPosition: this.legendPosition
     });
 
-<<<<<<< HEAD:projects/swimlane/ngx-charts/src/lib/pie-chart/pie-chart.component.ts
     this.formatDates();
-
-    const xOffset = this.margins[3] + this.dims.width / 2;
-=======
-    const xOffset = this.margins[3] + this.dims.width / 2 - this.legendMinWidth / 2;
->>>>>>> fix graph size:src/pie-chart/pie-chart.component.ts
+    const xOffset = this.margins[3] + (this.width - this.legendMinWidth) / 2;
     const yOffset = this.margins[0] + this.dims.height / 2;
     this.translation = `translate(${xOffset}, ${yOffset})`;
-    this.outerRadius = Math.min((this.dims.width - this.legendMinWidth), this.dims.height);
+    this.outerRadius = Math.min(this.width - this.legendMinWidth, this.dims.height);
     if (this.labels) {
       // make room for labels
       this.outerRadius /= 3;
