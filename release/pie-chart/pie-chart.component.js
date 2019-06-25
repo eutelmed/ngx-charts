@@ -63,10 +63,10 @@ var PieChartComponent = /** @class */ (function (_super) {
             showLegend: this.legend,
             legendPosition: this.legendPosition
         });
-        var xOffset = this.margins[3] + this.dims.width / 2 - this.legendMinWidth / 2;
+        var xOffset = this.margins[3] + (this.width - this.legendMinWidth) / 2;
         var yOffset = this.margins[0] + this.dims.height / 2;
         this.translation = "translate(" + xOffset + ", " + yOffset + ")";
-        this.outerRadius = Math.min((this.dims.width - this.legendMinWidth), this.dims.height);
+        this.outerRadius = Math.min(this.width - this.legendMinWidth, this.dims.height);
         if (this.labels) {
             // make room for labels
             this.outerRadius /= 3;
@@ -97,7 +97,7 @@ var PieChartComponent = /** @class */ (function (_super) {
                 label = label.toLocaleString();
             }
             if (items.indexOf(label) === -1) {
-                items.push(label);
+                items.push(label + " (" + d.value + "%)");
             }
         });
         return items;
