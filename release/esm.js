@@ -1101,7 +1101,7 @@ var ChartComponent = /** @class */ (function () {
                 }
             }
         }
-        if (this.legendOptions.minWidth) {
+        if (this.legendOptions && this.legendOptions.minWidth) {
             this.legendWidth = this.legendOptions.minWidth;
             this.chartWidth = this.view[0] - this.legendWidth;
         }
