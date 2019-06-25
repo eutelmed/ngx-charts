@@ -113,7 +113,7 @@ export class PieChartComponent extends BaseChartComponent {
     const xOffset = this.margins[3] + this.dims.width / 2 - this.legendMinWidth / 2;
     const yOffset = this.margins[0] + this.dims.height / 2;
     this.translation = `translate(${xOffset}, ${yOffset})`;
-    this.outerRadius = Math.min((this.dims.width - this.legendMinWidth), this.dims.height);
+    this.outerRadius = Math.min(this.width - this.legendMinWidth, this.dims.height);
     if (this.labels) {
       // make room for labels
       this.outerRadius /= 3;
@@ -137,7 +137,22 @@ export class PieChartComponent extends BaseChartComponent {
   }
 
   getDomain(): any[] {
-    return this.results.map(d => d.label);
+    const items = [];
+
+    this.results.map(d => {
+      let label = d.name;
+      if (label.constructor.name === 'Date') {
+        label = label.toLocaleDateString();
+      } else {
+        label = label.toLocaleString();
+      }
+
+      if (items.indexOf(label) === -1) {
+        items.push(`${label} (${d.value}%)`);
+      }
+    });
+
+    return items;
   }
 
   onClick(data: DataItem): void {
