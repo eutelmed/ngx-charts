@@ -62,6 +62,7 @@ export class PieChartComponent extends BaseChartComponent {
   @Input() legend = false;
   @Input() legendTitle: string = 'Legend';
   @Input() legendPosition: string = 'right';
+  @Input() legendMinWidth: number = 300;
   @Input() explodeSlices = false;
   @Input() doughnut = false;
   @Input() arcWidth = 0.25;
@@ -167,7 +168,8 @@ export class PieChartComponent extends BaseChartComponent {
       domain: this.domain,
       colors: this.colors,
       title: this.legendTitle,
-      position: this.legendPosition
+      position: this.legendPosition,
+      minWith: this.legendMinWidth,
     };
   }
 

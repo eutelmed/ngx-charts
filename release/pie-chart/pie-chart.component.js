@@ -32,6 +32,7 @@ var PieChartComponent = /** @class */ (function (_super) {
         _this.legend = false;
         _this.legendTitle = 'Legend';
         _this.legendPosition = 'right';
+        _this.legendMinWidth = 300;
         _this.explodeSlices = false;
         _this.doughnut = false;
         _this.arcWidth = 0.25;
@@ -113,7 +114,8 @@ var PieChartComponent = /** @class */ (function (_super) {
             domain: this.domain,
             colors: this.colors,
             title: this.legendTitle,
-            position: this.legendPosition
+            position: this.legendPosition,
+            minWith: this.legendMinWidth,
         };
     };
     PieChartComponent.prototype.onActivate = function (item) {
@@ -153,6 +155,10 @@ var PieChartComponent = /** @class */ (function (_super) {
         Input(),
         __metadata("design:type", String)
     ], PieChartComponent.prototype, "legendPosition", void 0);
+    __decorate([
+        Input(),
+        __metadata("design:type", Number)
+    ], PieChartComponent.prototype, "legendMinWidth", void 0);
     __decorate([
         Input(),
         __metadata("design:type", Object)

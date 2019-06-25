@@ -25,6 +25,7 @@ var ChartComponent = /** @class */ (function () {
         this.update();
     };
     ChartComponent.prototype.update = function () {
+        var minLegendWidth = 300;
         var legendColumns = 0;
         if (this.showLegend) {
             this.legendType = this.getLegendType();
@@ -37,11 +38,17 @@ var ChartComponent = /** @class */ (function () {
                 }
             }
         }
-        var chartColumns = 12 - legendColumns;
-        this.chartWidth = Math.floor((this.view[0] * chartColumns / 12.0));
-        this.legendWidth = (!this.legendOptions || this.legendOptions.position === 'right')
-            ? Math.floor((this.view[0] * legendColumns / 12.0))
-            : this.chartWidth;
+        if (this.legendOptions.minWidth) {
+            this.legendWidth = this.legendOptions.minWidth;
+            this.chartWidth = this.view[0] - this.legendWidth;
+        }
+        else {
+            var chartColumns = 12 - legendColumns;
+            this.chartWidth = Math.floor((this.view[0] * chartColumns / 12.0));
+            this.legendWidth = (!this.legendOptions || this.legendOptions.position === 'right')
+                ? Math.floor((this.view[0] * legendColumns / 12.0))
+                : this.chartWidth;
+        }
     };
     ChartComponent.prototype.getLegendType = function () {
         if (this.legendOptions.scaleType === 'linear') {
