@@ -3817,7 +3817,7 @@ var BarLabelComponent = /** @class */ (function () {
             this.formatedValue = Object(__WEBPACK_IMPORTED_MODULE_1__common_label_helper__["a" /* formatLabel */])(this.value);
         }
         if (this.orientation === 'horizontal') {
-            this.x = this.barX + this.barWidth;
+            this.x = this.barX + this.barWidth + 8;
             // if the value is negative then it's on the left of the x0. 
             // we need to put the data label in front of the bar
             if (this.value < 0) {
@@ -3833,7 +3833,7 @@ var BarLabelComponent = /** @class */ (function () {
         else {
             // orientation must be "vertical"      
             this.x = this.barX + this.barWidth / 2;
-            this.y = this.barY + this.barHeight;
+            this.y = this.barY + this.barHeight - 8;
             if (this.value < 0) {
                 this.y = this.y + this.verticalPadding;
                 this.textAnchor = 'end';
@@ -3842,7 +3842,7 @@ var BarLabelComponent = /** @class */ (function () {
                 this.y = this.y - this.verticalPadding;
                 this.textAnchor = 'start';
             }
-            this.transform = "rotate(-45, " + this.x + " , " + this.y + ")";
+            //this.transform = `rotate(-45, ${ this.x } , ${ this.y })`;
         }
     };
     __decorate([
@@ -7719,7 +7719,7 @@ var XAxisTicksComponent = /** @class */ (function () {
     XAxisTicksComponent = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
             selector: 'g[ngx-charts-x-axis-ticks]',
-            template: "\n    <svg:g #ticksel>\n      <svg:g *ngFor=\"let tick of ticks\" class=\"tick\" [attr.transform]=\"tickTransform(tick)\">\n        <title>{{ tickFormat(tick) }}</title>\n        <svg:text\n          stroke-width=\"0.01\"\n          [attr.text-anchor]=\"textAnchor\"\n          [attr.transform]=\"textTransform\"\n          [style.font-size]=\"'12px'\"\n        >\n          {{ tickTrim(tickFormat(tick)) }}\n        </svg:text>\n      </svg:g>\n    </svg:g>\n\n    <svg:g *ngFor=\"let tick of ticks\" [attr.transform]=\"tickTransform(tick)\">\n      <svg:g *ngIf=\"showGridLines\" [attr.transform]=\"gridLineTransform()\">\n        <svg:line class=\"gridline-path gridline-path-vertical\" [attr.y1]=\"-gridLineHeight\" y2=\"0\" />\n      </svg:g>\n    </svg:g>\n  ",
+            template: "\n    <svg:g #ticksel>\n      <svg:g *ngFor=\"let tick of ticks\" class=\"tick\" [attr.transform]=\"tickTransform(tick)\">\n        <title>{{ tickFormat(tick) }}</title>\n        <svg:text\n          stroke-width=\"0.01\"\n          [attr.text-anchor]=\"textAnchor\"\n          [attr.transform]=\"textTransform\"\n          [style.color]=\"'#122a35'\"\n          [style.font-size]=\"'10px'\">\n          {{tickTrim(tickFormat(tick))}}\n        </svg:text>\n      </svg:g>\n    </svg:g>\n\n    <svg:g *ngFor=\"let tick of ticks\" [attr.transform]=\"tickTransform(tick)\">\n      <svg:g *ngIf=\"showGridLines\" [attr.transform]=\"gridLineTransform()\">\n        <svg:line class=\"gridline-path gridline-path-vertical\" [attr.y1]=\"-gridLineHeight\" y2=\"0\" />\n      </svg:g>\n    </svg:g>\n  ",
             changeDetection: __WEBPACK_IMPORTED_MODULE_0__angular_core__["ChangeDetectionStrategy"].OnPush
         })
     ], XAxisTicksComponent);
@@ -16552,10 +16552,10 @@ var PieChartComponent = /** @class */ (function (_super) {
             legendPosition: this.legendPosition
         });
         this.formatDates();
-        var xOffset = this.margins[3] + this.dims.width / 2;
+        var xOffset = this.margins[3] + this.dims.width / 2 - this.legendMinWidth / 2;
         var yOffset = this.margins[0] + this.dims.height / 2;
         this.translation = "translate(" + xOffset + ", " + yOffset + ")";
-        this.outerRadius = Math.min(this.dims.width, this.dims.height);
+        this.outerRadius = Math.min(this.width - this.legendMinWidth, this.dims.height);
         if (this.labels) {
             // make room for labels
             this.outerRadius /= 3;
@@ -16576,7 +16576,20 @@ var PieChartComponent = /** @class */ (function (_super) {
         this.legendOptions = this.getLegendOptions();
     };
     PieChartComponent.prototype.getDomain = function () {
-        return this.results.map(function (d) { return d.label; });
+        var items = [];
+        this.results.map(function (d) {
+            var label = d.name;
+            if (label.constructor.name === 'Date') {
+                label = label.toLocaleDateString();
+            }
+            else {
+                label = label.toLocaleString();
+            }
+            if (items.indexOf(label) === -1) {
+                items.push(label + " (" + d.value + "%)");
+            }
+        });
+        return items;
     };
     PieChartComponent.prototype.onClick = function (data) {
         this.select.emit(data);
@@ -16591,7 +16604,7 @@ var PieChartComponent = /** @class */ (function (_super) {
             colors: this.colors,
             title: this.legendTitle,
             position: this.legendPosition,
-            minWith: this.legendMinWidth,
+            minWidth: this.legendMinWidth,
         };
     };
     PieChartComponent.prototype.onActivate = function (item, fromLegend) {

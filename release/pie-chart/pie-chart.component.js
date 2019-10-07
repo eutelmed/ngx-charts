@@ -64,10 +64,10 @@ var PieChartComponent = /** @class */ (function (_super) {
             legendPosition: this.legendPosition
         });
         this.formatDates();
-        var xOffset = this.margins[3] + this.dims.width / 2;
+        var xOffset = this.margins[3] + this.dims.width / 2 - this.legendMinWidth / 2;
         var yOffset = this.margins[0] + this.dims.height / 2;
         this.translation = "translate(" + xOffset + ", " + yOffset + ")";
-        this.outerRadius = Math.min(this.dims.width, this.dims.height);
+        this.outerRadius = Math.min(this.width - this.legendMinWidth, this.dims.height);
         if (this.labels) {
             // make room for labels
             this.outerRadius /= 3;
@@ -88,7 +88,20 @@ var PieChartComponent = /** @class */ (function (_super) {
         this.legendOptions = this.getLegendOptions();
     };
     PieChartComponent.prototype.getDomain = function () {
-        return this.results.map(function (d) { return d.label; });
+        var items = [];
+        this.results.map(function (d) {
+            var label = d.name;
+            if (label.constructor.name === 'Date') {
+                label = label.toLocaleDateString();
+            }
+            else {
+                label = label.toLocaleString();
+            }
+            if (items.indexOf(label) === -1) {
+                items.push(label + " (" + d.value + "%)");
+            }
+        });
+        return items;
     };
     PieChartComponent.prototype.onClick = function (data) {
         this.select.emit(data);
@@ -103,7 +116,7 @@ var PieChartComponent = /** @class */ (function (_super) {
             colors: this.colors,
             title: this.legendTitle,
             position: this.legendPosition,
-            minWith: this.legendMinWidth,
+            minWidth: this.legendMinWidth,
         };
     };
     PieChartComponent.prototype.onActivate = function (item, fromLegend) {
