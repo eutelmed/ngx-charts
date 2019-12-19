@@ -23,15 +23,9 @@ import { reduceTicks } from './ticks.helper';
           stroke-width="0.01"
           [attr.text-anchor]="textAnchor"
           [attr.transform]="textTransform"
-<<<<<<< HEAD:projects/swimlane/ngx-charts/src/lib/common/axes/x-axis-ticks.component.ts
-          [style.font-size]="'12px'"
-        >
-          {{ tickTrim(tickFormat(tick)) }}
-=======
           [style.color]="'#122a35'"
           [style.font-size]="'10px'">
           {{tickTrim(tickFormat(tick))}}
->>>>>>> change label styles:src/common/axes/x-axis-ticks.component.ts
         </svg:text>
       </svg:g>
     </svg:g>
