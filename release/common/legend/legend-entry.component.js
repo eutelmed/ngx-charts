@@ -46,6 +46,10 @@ var LegendEntryComponent = /** @class */ (function () {
         __metadata("design:type", Boolean)
     ], LegendEntryComponent.prototype, "isActive", void 0);
     __decorate([
+        Input(),
+        __metadata("design:type", Number)
+    ], LegendEntryComponent.prototype, "percentage", void 0);
+    __decorate([
         Output(),
         __metadata("design:type", EventEmitter)
     ], LegendEntryComponent.prototype, "select", void 0);
@@ -76,7 +80,7 @@ var LegendEntryComponent = /** @class */ (function () {
     LegendEntryComponent = __decorate([
         Component({
             selector: 'ngx-charts-legend-entry',
-            template: "\n    <span \n      [title]=\"formattedLabel\"\n      tabindex=\"-1\"\n      [class.active]=\"isActive\"\n      (click)=\"select.emit(formattedLabel)\">\n      <span\n        class=\"legend-label-color\"\n        [style.background-color]=\"color\"\n        (click)=\"toggle.emit(formattedLabel)\">\n      </span>\n      <span class=\"legend-label-text\">\n        {{trimmedLabel}}\n      </span>\n    </span>\n  ",
+            template: "\n    <span \n      [title]=\"formattedLabel\"\n      tabindex=\"-1\"\n      [class.active]=\"isActive\"\n      (click)=\"select.emit(formattedLabel)\">\n      <span\n        class=\"legend-label-color\"\n        [style.background-color]=\"color\"\n        (click)=\"toggle.emit(formattedLabel)\">\n      </span>\n      <span class=\"legend-label-text\">\n        {{trimmedLabel}}<span *ngIf=\"percentage !== undefined\"> ({{percentage}} %)</span>\n      </span>\n      \n    </span>\n  ",
             changeDetection: ChangeDetectionStrategy.OnPush
         })
     ], LegendEntryComponent);

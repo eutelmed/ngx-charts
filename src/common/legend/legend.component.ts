@@ -21,6 +21,7 @@ import { formatLabel } from '../label.helper';
             <ngx-charts-legend-entry
               [label]="entry.label"
               [formattedLabel]="entry.formattedLabel"
+              [percentage]="entry.percentage"
               [color]="entry.color"
               [isActive]="isActive(entry)"
               (select)="labelClick.emit($event)"
@@ -41,6 +42,7 @@ export class LegendComponent implements OnChanges {
   @Input() data;
   @Input() title;
   @Input() colors;
+  @Input() percentages: number[];
   @Input() height;
   @Input() width;
   @Input() activeEntries;
@@ -73,11 +75,13 @@ export class LegendComponent implements OnChanges {
         return i.label === formattedLabel;
       });
 
+      console.debug(this.percentages);
       if (idx === -1) {
         items.push({
           label,
           formattedLabel,
-          color: this.colors.getColor(label)
+          color: this.colors.getColor(label),
+          percentage: this.percentages && this.percentages[this.data.indexOf(label)]
         });
       }
     }

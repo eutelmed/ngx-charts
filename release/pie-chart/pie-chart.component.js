@@ -79,6 +79,7 @@ var PieChartComponent = /** @class */ (function (_super) {
             this.innerRadius = this.outerRadius * (1 - this.arcWidth);
         }
         this.domain = this.getDomain();
+        this.percentages = this.getPercentages();
         // sort data according to domain
         this.data = this.results.sort(function (a, b) {
             return _this.domain.indexOf(a.name) - _this.domain.indexOf(b.name);
@@ -97,10 +98,13 @@ var PieChartComponent = /** @class */ (function (_super) {
                 label = label.toLocaleString();
             }
             if (items.indexOf(label) === -1) {
-                items.push(label + " (" + d.value + "%)");
+                items.push("" + label);
             }
         });
         return items;
+    };
+    PieChartComponent.prototype.getPercentages = function () {
+        return this.results.map(function (d) { return d.value; });
     };
     PieChartComponent.prototype.onClick = function (data) {
         this.select.emit(data);
@@ -116,6 +120,7 @@ var PieChartComponent = /** @class */ (function (_super) {
             title: this.legendTitle,
             position: this.legendPosition,
             minWidth: this.legendMinWidth,
+            percentages: this.percentages
         };
     };
     PieChartComponent.prototype.onActivate = function (item) {

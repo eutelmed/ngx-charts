@@ -11,6 +11,7 @@ import {
 import { calculateViewDimensions } from '../common/view-dimensions.helper';
 import { ColorHelper } from '../common/color.helper';
 import { BaseChartComponent } from '../common/base-chart.component';
+import { DataItem } from '../models/chart-data.model';
 
 @Component({
   selector: 'ngx-charts-pie-chart',
@@ -21,11 +22,13 @@ import { BaseChartComponent } from '../common/base-chart.component';
       [legendOptions]="legendOptions"
       [activeEntries]="activeEntries"
       [animations]="animations"
-      (legendLabelActivate)="onActivate($event)"
-      (legendLabelDeactivate)="onDeactivate($event)"
-      (legendLabelClick)="onClick($event)">
+      (legendLabelActivate)="onActivate($event, true)"
+      (legendLabelDeactivate)="onDeactivate($event, true)"
+      (legendLabelClick)="onClick($event)"
+    >
       <svg:g [attr.transform]="translation" class="pie-chart chart">
-        <svg:g ngx-charts-pie-series
+        <svg:g
+          ngx-charts-pie-series
           [colors]="colors"
           [series]="data"
           [showLabels]="labels"
@@ -49,20 +52,15 @@ import { BaseChartComponent } from '../common/base-chart.component';
       </svg:g>
     </ngx-charts-chart>
   `,
-  styleUrls: [
-    '../common/base-chart.component.scss',
-    './pie-chart.component.scss'
-  ],
+  styleUrls: ['../common/base-chart.component.scss', './pie-chart.component.scss'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PieChartComponent extends BaseChartComponent {
-
   @Input() labels = false;
   @Input() legend = false;
   @Input() legendTitle: string = 'Legend';
   @Input() legendPosition: string = 'right';
-  @Input() legendMinWidth: number = 300;
   @Input() explodeSlices = false;
   @Input() doughnut = false;
   @Input() arcWidth = 0.25;
@@ -88,7 +86,6 @@ export class PieChartComponent extends BaseChartComponent {
   data: any;
   colors: ColorHelper;
   domain: any;
-  percentages: number[];
   dims: any;
   legendOptions: any;
 
@@ -110,10 +107,12 @@ export class PieChartComponent extends BaseChartComponent {
       legendPosition: this.legendPosition
     });
 
-    const xOffset = this.margins[3] + (this.width - this.legendMinWidth) / 2;
+    this.formatDates();
+
+    const xOffset = this.margins[3] + this.dims.width / 2;
     const yOffset = this.margins[0] + this.dims.height / 2;
     this.translation = `translate(${xOffset}, ${yOffset})`;
-    this.outerRadius = Math.min(this.width - this.legendMinWidth, this.dims.height);
+    this.outerRadius = Math.min(this.dims.width, this.dims.height);
     if (this.labels) {
       // make room for labels
       this.outerRadius /= 3;
@@ -126,7 +125,6 @@ export class PieChartComponent extends BaseChartComponent {
     }
 
     this.domain = this.getDomain();
-    this.percentages = this.getPercentages();
 
     // sort data according to domain
     this.data = this.results.sort((a, b) => {
@@ -138,29 +136,10 @@ export class PieChartComponent extends BaseChartComponent {
   }
 
   getDomain(): any[] {
-    const items = [];
-
-    this.results.map(d => {
-      let label = d.name;
-      if (label.constructor.name === 'Date') {
-        label = label.toLocaleDateString();
-      } else {
-        label = label.toLocaleString();
-      }
-
-      if (items.indexOf(label) === -1) {
-        items.push(`${label}`);
-      }
-    });
-
-    return items;
+    return this.results.map(d => d.label);
   }
 
-  getPercentages(): number[] {
-    return this.results.map(d => d.value);
-  }
-
-  onClick(data): void {
+  onClick(data: DataItem): void {
     this.select.emit(data);
   }
 
@@ -174,27 +153,41 @@ export class PieChartComponent extends BaseChartComponent {
       domain: this.domain,
       colors: this.colors,
       title: this.legendTitle,
-      position: this.legendPosition,
-      minWidth: this.legendMinWidth,
-      percentages: this.percentages
+      position: this.legendPosition
     };
   }
 
-  onActivate(item) {
+  onActivate(item, fromLegend = false) {
+    item = this.results.find(d => {
+      if (fromLegend) {
+        return d.label === item.name;
+      } else {
+        return d.name === item.name;
+      }
+    });
+
     const idx = this.activeEntries.findIndex(d => {
-      return d.name === item.name && d.value === item.value;
+      return d.name === item.name && d.value === item.value && d.series === item.series;
     });
     if (idx > -1) {
       return;
     }
 
-    this.activeEntries = [ item, ...this.activeEntries ];
+    this.activeEntries = [item, ...this.activeEntries];
     this.activate.emit({ value: item, entries: this.activeEntries });
   }
 
-  onDeactivate(item) {
+  onDeactivate(item, fromLegend = false) {
+    item = this.results.find(d => {
+      if (fromLegend) {
+        return d.label === item.name;
+      } else {
+        return d.name === item.name;
+      }
+    });
+
     const idx = this.activeEntries.findIndex(d => {
-      return d.name === item.name && d.value === item.value;
+      return d.name === item.name && d.value === item.value && d.series === item.series;
     });
 
     this.activeEntries.splice(idx, 1);

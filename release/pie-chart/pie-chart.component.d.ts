@@ -29,10 +29,12 @@ export declare class PieChartComponent extends BaseChartComponent {
     data: any;
     colors: ColorHelper;
     domain: any;
+    percentages: number[];
     dims: any;
     legendOptions: any;
     update(): void;
     getDomain(): any[];
+    getPercentages(): number[];
     onClick(data: any): void;
     setColors(): void;
     getLegendOptions(): {
@@ -42,6 +44,7 @@ export declare class PieChartComponent extends BaseChartComponent {
         title: string;
         position: string;
         minWidth: number;
+        percentages: number[];
     };
     onActivate(item: any): void;
     onDeactivate(item: any): void;

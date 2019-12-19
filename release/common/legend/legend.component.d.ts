@@ -4,6 +4,7 @@ export declare class LegendComponent implements OnChanges {
     data: any;
     title: any;
     colors: any;
+    percentages: number[];
     height: any;
     width: any;
     activeEntries: any;
